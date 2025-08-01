@@ -1,0 +1,14 @@
+.vscode
+.idea
+*.swp
+*.swo
+
+vendor/
+
+.DS_Store
+Thumbs.db
+
+.env
+
+coverage.out
+*.coverprofile
