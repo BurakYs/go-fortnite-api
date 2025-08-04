@@ -19,6 +19,7 @@ func TestCombineSingleFlag(t *testing.T) {
 func TestCombineMultipleFlags(t *testing.T) {
 	result := CombineFlags(FlagIncludePaths, FlagIncludeGameplayTags)
 	expected := FlagIncludePaths | FlagIncludeGameplayTags
+
 	if result != expected {
 		t.Errorf("Expected %v, got %v", expected, result)
 	}

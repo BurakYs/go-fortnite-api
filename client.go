@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -19,8 +20,8 @@ const (
 )
 
 var (
-	ErrNoAPIKey       = fmt.Errorf("an API key is required for this request")
-	ErrEmptyParameter = fmt.Errorf("parameter cannot be empty")
+	ErrNoAPIKey       = errors.New("an API key is required for this request")
+	ErrEmptyParameter = errors.New("parameter cannot be empty")
 )
 
 type APIResponse[T any] struct {
