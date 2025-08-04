@@ -51,7 +51,7 @@ func NewClient(language Language, apiKey string) *Client {
 	}
 }
 
-func (c *Client) Fetch(ctx context.Context, method, path string, query, body, result any) error {
+func (c *Client) Fetch(ctx context.Context, method, path string, query, body, out any) error {
 	u, err := url.Parse(BaseURL + path)
 	if err != nil {
 		return fmt.Errorf("failed to parse URL: %w", err)
@@ -129,8 +129,8 @@ func (c *Client) Fetch(ctx context.Context, method, path string, query, body, re
 		return fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	if result != nil {
-		if err := json.Unmarshal(apiResponse.Data, result); err != nil {
+	if out != nil {
+		if err := json.Unmarshal(apiResponse.Data, out); err != nil {
 			return fmt.Errorf("failed to unmarshal data from response: %w", err)
 		}
 	}
