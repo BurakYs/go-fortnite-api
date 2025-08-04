@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	Version = "1.0.0"
+	Version = "v1.0.0"
 	BaseURL = "https://fortnite-api.com"
 )
 
