@@ -1,40 +1,34 @@
 package fortniteapi
 
-import "testing"
+import (
+	"testing"
 
-func TestNoFlags(t *testing.T) {
+	"github.com/stretchr/testify/assert"
+)
+
+func Test_CombineFlags_Empty(t *testing.T) {
 	result := CombineFlags()
-	if result != 0 {
-		t.Errorf("Expected 0, got %v", result)
-	}
+	assert.Equal(t, ResponseFlag(0), result)
 }
 
-func TestCombineSingleFlag(t *testing.T) {
+func Test_CombineFlags_Single(t *testing.T) {
 	result := CombineFlags(FlagIncludePaths)
-	if result != FlagIncludePaths {
-		t.Errorf("Expected %v, got %v", FlagIncludePaths, result)
-	}
+	assert.Equal(t, FlagIncludePaths, result)
 }
 
-func TestCombineMultipleFlags(t *testing.T) {
+func Test_CombineFlags_Multiple(t *testing.T) {
 	result := CombineFlags(FlagIncludePaths, FlagIncludeGameplayTags)
 	expected := FlagIncludePaths | FlagIncludeGameplayTags
 
-	if result != expected {
-		t.Errorf("Expected %v, got %v", expected, result)
-	}
+	assert.Equal(t, expected, result)
 }
 
-func TestCombineDuplicateFlags(t *testing.T) {
+func Test_CombineFlags_Duplicate(t *testing.T) {
 	result := CombineFlags(FlagIncludePaths, FlagIncludePaths)
-	if result != FlagIncludePaths {
-		t.Errorf("Expected %v, got %v", FlagIncludePaths, result)
-	}
+	assert.Equal(t, FlagIncludePaths, result)
 }
 
-func TestFlagAllConstant(t *testing.T) {
+func Test_CombineFlags_AllConstant(t *testing.T) {
 	expected := FlagIncludePaths | FlagIncludeGameplayTags | FlagIncludeShopHistory
-	if FlagAll != expected {
-		t.Errorf("Expected %v, got %v", expected, FlagAll)
-	}
+	assert.Equal(t, expected, FlagAll)
 }
