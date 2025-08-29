@@ -206,7 +206,7 @@ func (c *Client) GetBRCosmeticByID(ctx context.Context, cosmeticID string, param
 	}
 
 	result := new(BRCosmeticByIDResponse)
-	err := c.Get(ctx, "/v2/cosmetics/br/%s"+cosmeticID, params, result)
+	err := c.Get(ctx, "/v2/cosmetics/br/"+cosmeticID, params, result)
 	return result, err
 }
 
@@ -306,7 +306,7 @@ func (c *Client) GetPlaylistByID(ctx context.Context, playlistID string, params 
 	}
 
 	result := new(PlaylistByIDResponse)
-	err := c.Get(ctx, "/v1/playlists/%s"+playlistID, params, result)
+	err := c.Get(ctx, "/v1/playlists/"+playlistID, params, result)
 	return result, err
 }
 
