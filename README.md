@@ -20,7 +20,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/BurakYs/go-fortnite-api"
@@ -39,14 +38,13 @@ func main() {
 		ResponseFlags: flags,
 	}
 
-	cosmetics, err := client.SearchBRCosmetic(context.TODO(), searchParams)
+	cosmetic, err := client.SearchBRCosmetic(context.TODO(), searchParams)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	formattedCosmetics, _ := json.MarshalIndent(cosmetics, "", "  ")
-	fmt.Println(string(formattedCosmetics))
+	fmt.Println(cosmetic.ID)
 }
 ```
 
