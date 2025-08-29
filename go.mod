@@ -1,11 +1,11 @@
 module github.com/BurakYs/go-fortnite-api
 
-go 1.24.5
+go 1.25
 
 require (
 	github.com/google/go-querystring v1.1.0
 	github.com/joho/godotenv v1.5.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 )
 
 require (
