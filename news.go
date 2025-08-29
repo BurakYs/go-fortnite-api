@@ -1,5 +1,7 @@
 package fortniteapi
 
+import "time"
+
 type NewsParams LanguageParams
 type BRNewsParams LanguageParams
 type STWNewsParams LanguageParams
@@ -28,7 +30,7 @@ type NewsMessage struct {
 
 type News struct {
 	Hash     string        `json:"hash"`
-	Date     string        `json:"date"`
+	Date     time.Time     `json:"date"`
 	Image    string        `json:"image"`
 	Motds    []NewsMotd    `json:"motds"`
 	Messages []NewsMessage `json:"messages"`

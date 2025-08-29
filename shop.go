@@ -1,5 +1,7 @@
 package fortniteapi
 
+import "time"
+
 type ShopParams LanguageParams
 
 type ShopItemBundle struct {
@@ -77,8 +79,8 @@ type ShopItem struct {
 	FinalPrice             int                     `json:"finalPrice"`
 	DevName                string                  `json:"devName"`
 	OfferID                string                  `json:"offerId"`
-	InDate                 string                  `json:"inDate"`
-	OutDate                string                  `json:"outDate"`
+	InDate                 time.Time               `json:"inDate"`
+	OutDate                time.Time               `json:"outDate"`
 	Bundle                 ShopItemBundle          `json:"bundle,omitzero"`
 	Banner                 ShopItemBanner          `json:"banner,omitzero"`
 	OfferTag               ShopItemOfferTag        `json:"offerTag,omitzero"`
@@ -102,7 +104,7 @@ type ShopItem struct {
 
 type ShopResponse struct {
 	Hash      string     `json:"hash"`
-	Date      string     `json:"date"`
+	Date      time.Time  `json:"date"`
 	VBuckIcon string     `json:"vbuckIcon"`
 	Entries   []ShopItem `json:"entries"`
 }

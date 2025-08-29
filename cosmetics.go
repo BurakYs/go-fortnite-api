@@ -1,5 +1,7 @@
 package fortniteapi
 
+import "time"
+
 type BRCosmeticType struct {
 	Value        string `json:"value"`
 	DisplayValue string `json:"displayValue"`
@@ -244,7 +246,7 @@ type NewCosmeticsLastAdditions struct {
 }
 
 type NewCosmeticsResponse struct {
-	Date          string                    `json:"date"`
+	Date          time.Time                 `json:"date"`
 	Build         string                    `json:"build"`
 	PreviousBuild string                    `json:"previousBuild"`
 	Hashes        NewCosmeticsHashes        `json:"hashes"`

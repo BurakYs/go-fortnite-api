@@ -1,5 +1,7 @@
 package fortniteapi
 
+import "time"
+
 type AESKeyParams struct {
 	// Enum: "aes", "hex"
 	//
@@ -18,5 +20,5 @@ type AESKeyResponse struct {
 	Build       string          `json:"build"`
 	MainKey     string          `json:"mainKey"`
 	DynamicKeys []AESDynamicKey `json:"dynamicKeys"`
-	Updated     string          `json:"updated"`
+	Updated     time.Time       `json:"updated"`
 }
