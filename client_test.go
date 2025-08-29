@@ -152,9 +152,9 @@ func Test_SearchBRCosmeticsByIDs(t *testing.T) {
 	resp, err := testClient.SearchBRCosmeticsByIDs(testCtx, ids, nil)
 
 	require.NoError(t, err)
-	assert.Len(t, resp, 2)
+	assert.Len(t, *resp, 2)
 
-	for _, cosmetic := range resp {
+	for _, cosmetic := range *resp {
 		assert.Contains(t, ids, cosmetic.ID)
 	}
 }

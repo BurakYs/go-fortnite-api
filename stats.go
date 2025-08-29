@@ -86,11 +86,9 @@ type BRStatsStats struct {
 	Touch         BRStatsTouch         `json:"touch"`
 }
 
-type BRStatsByNameResponse struct {
+type BRStatsResponse struct {
 	Account    BRStatsAccount    `json:"account"`
 	BattlePass BRStatsBattlePass `json:"battlePass"`
 	Image      string            `json:"image"`
 	Stats      BRStatsStats      `json:"stats"`
 }
-
-type BRStatsByIDResponse BRStatsByNameResponse
