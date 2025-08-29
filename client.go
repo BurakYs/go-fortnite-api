@@ -9,14 +9,13 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"time"
 
 	querypkg "github.com/google/go-querystring/query"
 )
 
 const (
-	Version = "v1.0.0"
-	BaseURL = "https://fortnite-api.com"
+	version = "v1.0.0"
+	baseURL = "https://fortnite-api.com"
 )
 
 var (
@@ -39,21 +38,21 @@ func (e *APIError) Error() string {
 }
 
 type Client struct {
-	HTTPClient *http.Client
-	Language
-	APIKey string
+	language   Language
+	httpClient *http.Client
+	apiKey     string
 }
 
 func NewClient(language Language, apiKey string) *Client {
 	return &Client{
-		HTTPClient: &http.Client{Timeout: 30 * time.Second},
-		Language:   language,
-		APIKey:     apiKey,
+		language:   language,
+		httpClient: &http.Client{},
+		apiKey:     apiKey,
 	}
 }
 
 func (c *Client) Fetch(ctx context.Context, method, path string, query, body, out any) error {
-	u, err := url.Parse(BaseURL + path)
+	u, err := url.Parse(baseURL + path)
 	if err != nil {
 		return fmt.Errorf("failed to parse URL: %w", err)
 	}
@@ -71,8 +70,8 @@ func (c *Client) Fetch(ctx context.Context, method, path string, query, body, ou
 		}
 	}
 
-	if c.Language != "" && !params.Has("language") {
-		params.Set("language", string(c.Language))
+	if c.language != "" && !params.Has("language") {
+		params.Set("language", string(c.language))
 	}
 
 	u.RawQuery = params.Encode()
@@ -85,8 +84,6 @@ func (c *Client) Fetch(ctx context.Context, method, path string, query, body, ou
 		}
 
 		bodyReader = bytes.NewReader(jsonBytes)
-	} else {
-		bodyReader = nil
 	}
 
 	request, err := http.NewRequestWithContext(ctx, method, u.String(), bodyReader)
@@ -94,25 +91,22 @@ func (c *Client) Fetch(ctx context.Context, method, path string, query, body, ou
 		return fmt.Errorf("failed to create new request: %w", err)
 	}
 
-	request.Header.Set("User-Agent", "go-fortnite-api/"+Version)
+	request.Header.Set("User-Agent", "go-fortnite-api/"+version)
 
-	if c.APIKey != "" {
-		request.Header.Set("Authorization", c.APIKey)
+	if c.apiKey != "" {
+		request.Header.Set("Authorization", c.apiKey)
 	}
 
 	if body != nil {
 		request.Header.Set("Content-Type", "application/json")
 	}
 
-	response, err := c.HTTPClient.Do(request)
+	response, err := c.httpClient.Do(request)
 	if err != nil {
 		return fmt.Errorf("failed to send request: %w", err)
 	}
 
-	defer func() {
-		io.Copy(io.Discard, response.Body)
-		response.Body.Close()
-	}()
+	defer response.Body.Close() //nolint:errcheck
 
 	decoder := json.NewDecoder(response.Body)
 
@@ -140,15 +134,7 @@ func (c *Client) Fetch(ctx context.Context, method, path string, query, body, ou
 }
 
 func (c *Client) Get(ctx context.Context, path string, params, result any) error {
-	return c.Fetch(ctx, "GET", path, params, nil, result)
-}
-
-func (c *Client) checkAPIKey() error {
-	if c.APIKey == "" {
-		return ErrNoAPIKey
-	}
-
-	return nil
+	return c.Fetch(ctx, http.MethodGet, path, params, nil, result)
 }
 
 func (c *Client) GetAESKey(ctx context.Context, params *AESKeyParams) (AESKeyResponse, error) {
@@ -242,7 +228,7 @@ func (c *Client) SearchBRCosmetic(ctx context.Context, params *SearchBRCosmeticP
 	}
 
 	if params.SearchLanguage == "" {
-		params.SearchLanguage = c.Language
+		params.SearchLanguage = c.language
 	}
 
 	err := c.Get(ctx, "/v2/cosmetics/br/search", params, &result)
@@ -257,7 +243,7 @@ func (c *Client) SearchBRCosmetics(ctx context.Context, params *SearchBRCosmetic
 	}
 
 	if params.SearchLanguage == "" {
-		params.SearchLanguage = c.Language
+		params.SearchLanguage = c.language
 	}
 
 	err := c.Get(ctx, "/v2/cosmetics/br/search/all", params, &result)
@@ -381,6 +367,14 @@ func (c *Client) GetBRStatsByID(ctx context.Context, id string, params *BRStatsB
 	return result, err
 }
 
+func (c *Client) checkAPIKey() error {
+	if c.apiKey == "" {
+		return ErrNoAPIKey
+	}
+
+	return nil
+}
+
 func emptyParamErr(name string) error {
-	return fmt.Errorf("%s %w", name, ErrEmptyParameter)
+	return fmt.Errorf("%w: %s", ErrEmptyParameter, name)
 }
