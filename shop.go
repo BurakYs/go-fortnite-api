@@ -93,11 +93,11 @@ type ShopItem struct {
 	DisplayAssetPath       string                  `json:"displayAssetPath"`
 	NewDisplayAssetPath    string                  `json:"newDisplayAssetPath"`
 	NewDisplayAsset        ShopItemNewDisplayAsset `json:"newDisplayAsset"`
-	BRItems                []BRCosmetic            `json:"brItems,omitzero"`
-	Tracks                 []Track                 `json:"tracks,omitzero"`
-	Instruments            []Instrument            `json:"instruments,omitzero"`
-	Cars                   []Car                   `json:"cars,omitzero"`
-	LegoKits               []LegoKit               `json:"legoKits,omitzero"`
+	BRItems                []BRCosmetic            `json:"brItems,omitempty"`
+	Tracks                 []Track                 `json:"tracks,omitempty"`
+	Instruments            []Instrument            `json:"instruments,omitempty"`
+	Cars                   []Car                   `json:"cars,omitempty"`
+	LegoKits               []LegoKit               `json:"legoKits,omitempty"`
 }
 
 type ShopResponse struct {

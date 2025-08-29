@@ -80,17 +80,17 @@ type BRCosmetic struct {
 	Images                 BRCosmeticImages        `json:"images"`
 	Variants               []BRCosmeticItemVariant `json:"variants,omitzero"`
 	BuiltInEmoteIDs        []string                `json:"builtInEmoteIds,omitzero"`
-	SearchTags             []string                `json:"searchTags"`
-	GameplayTags           []string                `json:"gameplayTags"`
-	MetaTags               []string                `json:"metaTags"`
+	SearchTags             []string                `json:"searchTags,omitempty"`
+	GameplayTags           []string                `json:"gameplayTags,omitempty"`
+	MetaTags               []string                `json:"metaTags,omitempty"`
 	ShowcaseVideo          string                  `json:"showcaseVideo"`
-	DynamicPakID           string                  `json:"dynamicPakId"`
-	ItemPreviewHeroPath    string                  `json:"itemPreviewHeroPath"`
-	DisplayAssetPath       string                  `json:"displayAssetPath"`
-	DefinitionPath         string                  `json:"definitionPath"`
-	Path                   string                  `json:"path"`
+	DynamicPakID           string                  `json:"dynamicPakId,omitempty"`
+	ItemPreviewHeroPath    string                  `json:"itemPreviewHeroPath,omitempty"`
+	DisplayAssetPath       string                  `json:"displayAssetPath,omitempty"`
+	DefinitionPath         string                  `json:"definitionPath,omitempty"`
+	Path                   string                  `json:"path,omitempty"`
 	Added                  string                  `json:"added"`
-	ShopHistory            []string                `json:"shopHistory"`
+	ShopHistory            []string                `json:"shopHistory,omitempty"`
 }
 
 type TrackDifficulty struct {
@@ -112,11 +112,11 @@ type Track struct {
 	BPM          int             `json:"bpm"`
 	Duration     int             `json:"duration"`
 	Difficulty   TrackDifficulty `json:"difficulty"`
-	GameplayTags []string        `json:"gameplayTags"`
+	GameplayTags []string        `json:"gameplayTags,omitempty"`
 	Genres       []string        `json:"genres"`
 	AlbumArt     string          `json:"albumArt"`
-	Added        string          `json:"added"`
-	ShopHistory  []string        `json:"shopHistory"`
+	Added        string          `json:"added,omitempty"`
+	ShopHistory  []string        `json:"shopHistory,omitempty"`
 }
 
 type InstrumentImages struct {
@@ -132,11 +132,11 @@ type Instrument struct {
 	Rarity        BRCosmeticRarity `json:"rarity"`
 	Images        InstrumentImages `json:"images"`
 	Series        BRCosmeticSeries `json:"series,omitzero"`
-	GameplayTags  []string         `json:"gameplayTags"`
+	GameplayTags  []string         `json:"gameplayTags,omitempty"`
 	Path          string           `json:"path"`
 	ShowcaseVideo string           `json:"showcaseVideo"`
 	Added         string           `json:"added"`
-	ShopHistory   []string         `json:"shopHistory"`
+	ShopHistory   []string         `json:"shopHistory,omitempty"`
 }
 
 type CarImages struct {
@@ -153,11 +153,11 @@ type Car struct {
 	Rarity        BRCosmeticRarity `json:"rarity"`
 	Images        CarImages        `json:"images"`
 	Series        BRCosmeticSeries `json:"series,omitzero"`
-	GameplayTags  []string         `json:"gameplayTags"`
-	Path          string           `json:"path"`
+	GameplayTags  []string         `json:"gameplayTags,omitempty"`
+	Path          string           `json:"path,omitempty"`
 	ShowcaseVideo string           `json:"showcaseVideo"`
 	Added         string           `json:"added"`
-	ShopHistory   []string         `json:"shopHistory"`
+	ShopHistory   []string         `json:"shopHistory,omitempty"`
 }
 
 type LegoImages struct {
@@ -185,12 +185,12 @@ type LegoKit struct {
 	ID           string           `json:"id"`
 	Name         string           `json:"name"`
 	Type         BRCosmeticType   `json:"type"`
-	Series       BRCosmeticSeries `json:"series"`
-	GameplayTags []string         `json:"gameplayTags"`
+	Series       BRCosmeticSeries `json:"series,omitzero"`
+	GameplayTags []string         `json:"gameplayTags,omitempty"`
 	Images       LegoKitsImages   `json:"images"`
-	Path         string           `json:"path"`
+	Path         string           `json:"path,omitempty"`
 	Added        string           `json:"added"`
-	ShopHistory  []string         `json:"shopHistory"`
+	ShopHistory  []string         `json:"shopHistory,omitempty"`
 }
 
 type BeanImages struct {

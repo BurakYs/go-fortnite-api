@@ -20,8 +20,8 @@ type Banner struct {
 	Category        string             `json:"category"`
 	FullUsageRights bool               `json:"fullUsageRights"`
 	Rarity          BannerRarity       `json:"rarity"`
-	Series          BannerSeries       `json:"series"`
-	Set             BannerSet          `json:"set"`
+	Series          BannerSeries       `json:"series,omitzero"`
+	Set             BannerSet          `json:"set,omitzero"`
 	Introduction    BannerIntroduction `json:"introduction"`
 	Images          BannerImages       `json:"images"`
 }
