@@ -49,7 +49,7 @@ type BRCosmeticImages struct {
 	Featured  string               `json:"featured,omitempty"`
 	Lego      BRCosmeticLegoImages `json:"lego,omitzero"`
 	Bean      BRCosmeticBeanImages `json:"bean,omitzero"`
-	Other     map[string]string    `json:"Other,omitzero"`
+	Other     map[string]string    `json:"Other,omitzero"` //nolint:tagliatelle
 }
 
 type BRCosmeticVariantOption struct {

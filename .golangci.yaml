@@ -1,0 +1,29 @@
+version: "2"
+linters:
+  default: all
+  disable:
+    - wsl
+    - testpackage
+    - depguard
+    - revive
+    - exhaustruct
+    - noinlineerr
+  exclusions:
+    generated: lax
+    warn-unused: true
+    rules:
+      - path: _test\.go
+        linters:
+          - gocyclo
+          - errcheck
+          - dupl
+          - gosec
+          - gochecknoglobals
+      - path-except: _test\.go
+        linters:
+          - forbidigo
+      - path: client\.go
+        linters:
+          - lll
+          - nlreturn
+          - wsl_v5

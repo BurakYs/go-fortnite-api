@@ -52,53 +52,14 @@ func NewClient(language Language, apiKey string) *Client {
 }
 
 func (c *Client) Fetch(ctx context.Context, method, path string, query, body, out any) error {
-	u, err := url.Parse(baseURL + path)
+	fullURL, err := c.buildURL(path, query)
 	if err != nil {
-		return fmt.Errorf("failed to parse URL: %w", err)
+		return err
 	}
 
-	params := url.Values{}
-
-	if query != nil {
-		if values, ok := query.(url.Values); ok {
-			params = values
-		} else {
-			params, err = querypkg.Values(query)
-			if err != nil {
-				return fmt.Errorf("failed to encode query: %w", err)
-			}
-		}
-	}
-
-	if c.language != "" && !params.Has("language") {
-		params.Set("language", string(c.language))
-	}
-
-	u.RawQuery = params.Encode()
-
-	var bodyReader io.Reader
-	if body != nil {
-		jsonBytes, err := json.Marshal(body)
-		if err != nil {
-			return fmt.Errorf("failed to marshal request body: %w", err)
-		}
-
-		bodyReader = bytes.NewReader(jsonBytes)
-	}
-
-	request, err := http.NewRequestWithContext(ctx, method, u.String(), bodyReader)
+	request, err := c.NewRequest(ctx, method, fullURL, body)
 	if err != nil {
-		return fmt.Errorf("failed to create new request: %w", err)
-	}
-
-	request.Header.Set("User-Agent", "go-fortnite-api/"+version)
-
-	if c.apiKey != "" {
-		request.Header.Set("Authorization", c.apiKey)
-	}
-
-	if body != nil {
-		request.Header.Set("Content-Type", "application/json")
+		return err
 	}
 
 	response, err := c.httpClient.Do(request)
@@ -135,6 +96,36 @@ func (c *Client) Fetch(ctx context.Context, method, path string, query, body, ou
 
 func (c *Client) Get(ctx context.Context, path string, params, result any) error {
 	return c.Fetch(ctx, http.MethodGet, path, params, nil, result)
+}
+
+func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body any) (*http.Request, error) {
+	var bodyReader io.Reader
+
+	if body != nil {
+		jsonBytes, err := json.Marshal(body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal request body: %w", err)
+		}
+
+		bodyReader = bytes.NewReader(jsonBytes)
+	}
+
+	request, err := http.NewRequestWithContext(ctx, method, urlStr, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create new request: %w", err)
+	}
+
+	request.Header.Set("User-Agent", "go-fortnite-api/"+version)
+
+	if c.apiKey != "" {
+		request.Header.Set("Authorization", c.apiKey)
+	}
+
+	if body != nil {
+		request.Header.Set("Content-Type", "application/json")
+	}
+
+	return request, nil
 }
 
 func (c *Client) GetAESKey(ctx context.Context, params *AESKeyParams) (*AESKeyResponse, error) {
@@ -209,13 +200,13 @@ func (c *Client) GetBeanCosmeticsList(ctx context.Context, params *BeanCosmetics
 	return result, err
 }
 
-func (c *Client) GetBRCosmeticByID(ctx context.Context, id string, params *BRCosmeticByIDParams) (*BRCosmeticByIDResponse, error) {
-	if id == "" {
-		return nil, emptyParamErr("id")
+func (c *Client) GetBRCosmeticByID(ctx context.Context, cosmeticID string, params *BRCosmeticByIDParams) (*BRCosmeticByIDResponse, error) {
+	if cosmeticID == "" {
+		return nil, emptyParamErr("cosmeticID")
 	}
 
 	result := new(BRCosmeticByIDResponse)
-	err := c.Get(ctx, fmt.Sprintf("/v2/cosmetics/br/%s", id), params, result)
+	err := c.Get(ctx, "/v2/cosmetics/br/%s"+cosmeticID, params, result)
 	return result, err
 }
 
@@ -309,13 +300,13 @@ func (c *Client) GetPlaylists(ctx context.Context, params *PlaylistsParams) (*Pl
 	return result, err
 }
 
-func (c *Client) GetPlaylistByID(ctx context.Context, id string, params *PlaylistByIDParams) (*PlaylistByIDResponse, error) {
-	if id == "" {
-		return nil, emptyParamErr("id")
+func (c *Client) GetPlaylistByID(ctx context.Context, playlistID string, params *PlaylistByIDParams) (*PlaylistByIDResponse, error) {
+	if playlistID == "" {
+		return nil, emptyParamErr("playlistID")
 	}
 
 	result := new(PlaylistByIDResponse)
-	err := c.Get(ctx, fmt.Sprintf("/v1/playlists/%s", id), params, result)
+	err := c.Get(ctx, "/v1/playlists/%s"+playlistID, params, result)
 	return result, err
 }
 
@@ -344,18 +335,44 @@ func (c *Client) GetBRStatsByName(ctx context.Context, name string, params *BRSt
 	return result, err
 }
 
-func (c *Client) GetBRStatsByID(ctx context.Context, id string, params *BRStatsByIDParams) (*BRStatsResponse, error) {
+func (c *Client) GetBRStatsByID(ctx context.Context, playlistID string, params *BRStatsByIDParams) (*BRStatsResponse, error) {
 	if err := c.checkAPIKey(); err != nil {
 		return nil, err
 	}
 
-	if id == "" {
-		return nil, emptyParamErr("id")
+	if playlistID == "" {
+		return nil, emptyParamErr("playlistID")
 	}
 
 	result := new(BRStatsResponse)
-	err := c.Get(ctx, fmt.Sprintf("/v2/stats/br/v2/%s", id), params, result)
+	err := c.Get(ctx, "/v2/stats/br/v2/"+playlistID, params, result)
 	return result, err
+}
+
+func (c *Client) buildURL(path string, query any) (string, error) {
+	fullURL, err := url.Parse(baseURL + path)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse URL: %w", err)
+	}
+
+	params := url.Values{}
+	if query != nil {
+		if values, ok := query.(url.Values); ok {
+			params = values
+		} else {
+			params, err = querypkg.Values(query)
+			if err != nil {
+				return "", fmt.Errorf("failed to encode query: %w", err)
+			}
+		}
+	}
+
+	if c.language != "" && !params.Has("language") {
+		params.Set("language", string(c.language))
+	}
+
+	fullURL.RawQuery = params.Encode()
+	return fullURL.String(), nil
 }
 
 func (c *Client) checkAPIKey() error {

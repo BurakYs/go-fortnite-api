@@ -53,10 +53,10 @@ type ShopItemNewDisplayAssetMaterialInstance struct {
 	ID          string            `json:"id"`
 	PrimaryMode string            `json:"primaryMode"`
 	ProductTag  string            `json:"productTag"`
-	Images      map[string]string `json:"Images"`
-	Colors      map[string]string `json:"Colors"`
-	Scalings    map[string]string `json:"Scalings"`
-	Flags       map[string]bool   `json:"Flags"`
+	Images      map[string]string `json:"Images"`   //nolint:tagliatelle
+	Colors      map[string]string `json:"Colors"`   //nolint:tagliatelle
+	Scalings    map[string]string `json:"Scalings"` //nolint:tagliatelle
+	Flags       map[string]bool   `json:"Flags"`    //nolint:tagliatelle
 }
 
 type ShopItemNewDisplayAssetRenderImage struct {
